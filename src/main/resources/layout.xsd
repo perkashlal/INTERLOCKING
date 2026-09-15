@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+
+  <!-- Automatic Train Interlocking System - railway layout schema (SRS Section 6) -->
+
+  <xs:element name="layout">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="trackSections">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="trackSection" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="id" type="xs:ID" use="required"/>
+                  <!-- space-separated list of neighboring trackSection ids -->
+                  <xs:attribute name="neighbors" type="xs:string" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="points" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="point" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="id" type="xs:ID" use="required"/>
+                  <!-- space-separated list of trackSection ids covered by this point -->
+                  <xs:attribute name="trackSections" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="markerboards" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="markerboard" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="id" type="xs:ID" use="required"/>
+                  <xs:attribute name="trackSection" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

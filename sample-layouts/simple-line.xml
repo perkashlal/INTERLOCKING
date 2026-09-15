@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Linear layout, no points/branches: T1 - T2 - T3 - T4 - T5 -->
+<layout>
+  <trackSections>
+    <trackSection id="T1" neighbors="T2"/>
+    <trackSection id="T2" neighbors="T1 T3"/>
+    <trackSection id="T3" neighbors="T2 T4"/>
+    <trackSection id="T4" neighbors="T3 T5"/>
+    <trackSection id="T5" neighbors="T4"/>
+  </trackSections>
+  <points/>
+  <markerboards>
+    <markerboard id="M1" trackSection="T1"/>
+    <markerboard id="M2" trackSection="T5"/>
+  </markerboards>
+</layout>

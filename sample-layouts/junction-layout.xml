@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Layout with a branching point P1 at T2, splitting toward T3/T5 and T4/T6:
+
+        T1 - T2 -(P1)-+- T3 - T5
+                       +- T4 - T6
+-->
+<layout>
+  <trackSections>
+    <trackSection id="T1" neighbors="T2"/>
+    <trackSection id="T2" neighbors="T1 T3 T4"/>
+    <trackSection id="T3" neighbors="T2 T5"/>
+    <trackSection id="T4" neighbors="T2 T6"/>
+    <trackSection id="T5" neighbors="T3"/>
+    <trackSection id="T6" neighbors="T4"/>
+  </trackSections>
+  <points>
+    <point id="P1" trackSections="T2 T3 T4"/>
+  </points>
+  <markerboards>
+    <markerboard id="M1" trackSection="T1"/>
+    <markerboard id="M2" trackSection="T5"/>
+    <markerboard id="M3" trackSection="T6"/>
+  </markerboards>
+</layout>

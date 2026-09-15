@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Intentionally invalid: trackSection missing required "id" attribute, and an unclosed tag. -->
+<layout>
+  <trackSections>
+    <trackSection neighbors="T2"/>
+    <trackSection id="T2" neighbors="T1">
+  </trackSections>
+</layout>
