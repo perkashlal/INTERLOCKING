@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xmi:XMI xmlns:xmi="http://www.omg.org/spec/XMI/2.4.1" xmi:version="2.4.1">
+  <xmi:Documentation exporter="DK-IXL" exporterVersion="0.1"/>
+  <interlocking id="ixl_lvr_1" version="0.1">
+    <network id="net_lvr_1">
+      <trackSection id="533" length="100" type="linear">
+        <neighbor ref="PM01U" side="up"/>
+        <neighbor ref="A593" side="down"/>
+      </trackSection>
+      <trackSection id="534" length="100" type="linear">
+          <neighbor ref="PM01U" side="up"/>
+          <neighbor ref="A594" side="down"/>
+      </trackSection>
+      
+      <!-- Sections added on LEFT side -->
+      <trackSection id="A593" length="100" type="linear">
+          <neighbor ref="533" side="up"/>
+      </trackSection>
+      <trackSection id="A594" length="100" type="linear">
+          <neighbor ref="534" side="up"/>
+      </trackSection>
+      <!-- End Section added -->
+      
+  
+      <trackSection id="PM01U" length="100" type="point">
+        <neighbor ref="533" side="plus"/>
+        <neighbor ref="534" side="minus"/>
+        <neighbor ref="083" side="stem"/>
+      </trackSection>
+      <trackSection id="083" length="100" type="linear">
+        <neighbor ref="PM01U" side="down"/>
+        <neighbor ref="PM02U" side="up"/>
+      </trackSection>
+      <trackSection id="PM02U" length="100" type="point">
+        <neighbor ref="PM03U" side="plus"/>
+        <neighbor ref="803" side="minus"/>
+        <neighbor ref="083" side="stem"/>
+      </trackSection>
+      <trackSection id="PM03U" length="100" type="point">
+          <neighbor ref="802" side="plus"/>
+          <neighbor ref="801" side="minus"/>
+          <neighbor ref="PM02U" side="stem"/>
+      </trackSection>
+      
+      <trackSection id="803" length="100" type="linear">
+          <neighbor ref="PM02U" side="down"/>
+          <neighbor ref="A893" side="up"/>
+      </trackSection>
+      <trackSection id="802" length="100" type="linear">
+          <neighbor ref="PM03U" side="down"/>
+          <neighbor ref="PM04U" side="up"/>
+      </trackSection>
+      
+      <trackSection id="801" length="100" type="linear">
+          <neighbor ref="PM03U" side="down"/>
+          <neighbor ref="PM04U" side="up"/>
+      </trackSection>
+      <trackSection id="PM04U" length="100" type="point">
+        <neighbor ref="801" side="plus"/>
+        <neighbor ref="802" side="minus"/>
+        <neighbor ref="804" side="stem"/>
+      </trackSection>
+      <trackSection id="804" length="100" type="linear">
+        <neighbor ref="PM04U" side="down"/>
+        <neighbor ref="A894" side="up"/>
+      </trackSection>
+
+    <!-- Sections added on RIGHT side -->
+        <trackSection id="A893" length="100" type="linear">
+            <neighbor ref="803" side="down"/>
+        </trackSection>
+        <trackSection id="A894" length="100" type="linear">
+            <neighbor ref="804" side="down"/>
+        </trackSection>
+        <!-- End Section added -->
+
+
+      <markerboard distance="20.0" id="LU11" mounted="up" track="533"/>
+      <markerboard distance="20.0" id="LXU11" mounted="up" track="534"/>
+      
+      <markerboard distance="20.0" id="TXU11" mounted="down" track="083"/>
+      <markerboard distance="20.0" id="CU11" mounted="up" track="083"/>
+      
+      <markerboard distance="20.0" id="FU11" mounted="down" track="803"/>
+      <markerboard distance="20.0" id="EU11" mounted="down" track="802"/>
+      <markerboard distance="20.0" id="ECU11" mounted="up" track="802"/>
+      
+      <markerboard distance="20.0" id="DU11" mounted="down" track="801"/>
+      <markerboard distance="20.0" id="DCU11" mounted="up" track="801"/>
+      
+      <markerboard distance="20.0" id="GU11" mounted="down" track="804"/>
+      
+      
+      
+      
+      
+      
+      <!-- Markerboards added -->
+      <markerboard distance="20.0" id="AXU533" mounted="down" track="533"/>
+      <markerboard distance="20.0" id="AU534" mounted="down" track="534"/>
+      <markerboard distance="20.0" id="AU593" mounted="up" track="A593"/>
+      <markerboard distance="20.0" id="AXU594" mounted="up" track="A594"/>
+      
+      <markerboard distance="20.0" id="ACU803" mounted="up" track="803"/>
+      <markerboard distance="20.0" id="ACU804" mounted="up" track="804"/>
+      <markerboard distance="20.0" id="AU893" mounted="down" track="A893"/>
+      <markerboard distance="20.0" id="AU894" mounted="down" track="A894"/>
+      <!-- End Markerboards added -->
+      
+      
+
+    </network>
+    <routetable id="rt_lvr_1" network="net_lvr_1">
+    </routetable>
+  </interlocking>
+</xmi:XMI>

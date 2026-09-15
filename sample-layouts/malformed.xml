@@ -1,8 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Intentionally invalid: trackSection missing required "id" attribute, and an unclosed tag. -->
-<layout>
-  <trackSections>
-    <trackSection neighbors="T2"/>
-    <trackSection id="T2" neighbors="T1">
-  </trackSections>
-</layout>
+<xmi:XMI xmlns:xmi="http://www.omg.org/spec/XMI/2.4.1" xmi:version="2.4.1">
+  <interlocking id="ixl_malformed" version="0.1">
+    <network id="net_malformed">
+      <trackSection length="100" type="linear">
+        <neighbor ref="T2" side="down"/>
+      </trackSection>
+      <trackSection id="T2" length="100" type="linear">
+        <neighbor ref="T1" side="up"/>
+    </network>
+  </interlocking>
+</xmi:XMI>
