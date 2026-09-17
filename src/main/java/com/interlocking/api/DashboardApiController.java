@@ -1,11 +1,15 @@
 package com.interlocking.api;
 
+import com.interlocking.api.dto.FindRouteRequest;
 import com.interlocking.api.dto.LoadLayoutResponse;
+import com.interlocking.api.dto.RouteResponse;
 import com.interlocking.api.dto.SetOccupancyRequest;
 import com.interlocking.api.dto.StateSnapshotResponse;
 import com.interlocking.model.LayoutGraph;
 import com.interlocking.model.TrackSection;
 import com.interlocking.parser.XmlLayoutParser;
+import com.interlocking.route.Route;
+import com.interlocking.route.RouteReservationService;
 import com.interlocking.state.ScenarioStateManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +22,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
- * REST facade for the dashboard (SRS Fig. 3/4): load layout, set occupancy, inspect
- * state, and clear state. Route requests are added once RouteFinder/Reservation/
- * MovementSimulator exist.
+ * REST facade for the dashboard (SRS Fig. 3/4): load layout, set occupancy, find and
+ * reserve a route, inspect state, and clear state. Train movement simulation is added
+ * once MovementSimulator exists.
  */
 @RestController
 @RequestMapping("/api")
@@ -28,10 +32,13 @@ public class DashboardApiController {
 
     private final XmlLayoutParser layoutParser;
     private final ScenarioStateManager stateManager;
+    private final RouteReservationService routeReservationService;
 
-    public DashboardApiController(XmlLayoutParser layoutParser, ScenarioStateManager stateManager) {
+    public DashboardApiController(XmlLayoutParser layoutParser, ScenarioStateManager stateManager,
+                                   RouteReservationService routeReservationService) {
         this.layoutParser = layoutParser;
         this.stateManager = stateManager;
+        this.routeReservationService = routeReservationService;
     }
 
     /** FR-01/02/03/17/18: load (or reload) a legal XML layout; replaces any prior layout and state (SPR-06). */
@@ -50,6 +57,13 @@ public class DashboardApiController {
         List<String> ids = request.trackSectionIds() == null ? List.of() : request.trackSectionIds();
         stateManager.setInitialOccupancy(ids);
         return snapshot();
+    }
+
+    /** FR-05..FR-15/FR-08: find and reserve a safe route between two tracks (by id or markerboard id). */
+    @PostMapping("/route")
+    public RouteResponse findRoute(@RequestBody FindRouteRequest request) {
+        Route route = routeReservationService.findAndReserveRoute(request.fromId(), request.toId());
+        return new RouteResponse(route.trackSectionIds(), route.pointPositions());
     }
 
     /** NFR-03: current occupancy/reservation snapshot for the dashboard. */

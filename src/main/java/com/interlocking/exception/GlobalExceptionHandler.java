@@ -26,6 +26,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new ApiError(e.getMessage()));
     }
 
+    /** No safe route currently exists (blocked, disconnected, or an illegal point crossing). */
+    @ExceptionHandler(RouteNotFoundException.class)
+    public ResponseEntity<ApiError> handleRouteNotFound(RouteNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiError(e.getMessage()));
+    }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(NoResourceFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)

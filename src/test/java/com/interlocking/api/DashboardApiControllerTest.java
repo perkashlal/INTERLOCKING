@@ -1,6 +1,7 @@
 package com.interlocking.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.interlocking.api.dto.FindRouteRequest;
 import com.interlocking.api.dto.SetOccupancyRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import static org.hamcrest.Matchers.contains;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -89,6 +91,52 @@ class DashboardApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.layoutLoaded").value(true))
                 .andExpect(jsonPath("$.occupiedTrackIds").isEmpty());
+    }
+
+    @Test
+    void findsAndReservesRouteThroughPlusLegOfPoint() throws Exception {
+        mockMvc.perform(post("/api/layout").content(sampleLayout("junction-layout.xml")))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/route")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new FindRouteRequest("T1", "T5"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.trackSectionIds", contains("T1", "T2", "P1", "T3", "T5")))
+                .andExpect(jsonPath("$.pointPositions.P1").value("PLUS"));
+
+        mockMvc.perform(get("/api/state"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.reservedTrackIds", contains("P1", "T1", "T2", "T3", "T5")));
+    }
+
+    @Test
+    void routeRequestAcceptsMarkerboardIds() throws Exception {
+        mockMvc.perform(post("/api/layout").content(sampleLayout("junction-layout.xml")))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/route")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new FindRouteRequest("M1", "M3"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.trackSectionIds", contains("T1", "T2", "P1", "T4", "T6")))
+                .andExpect(jsonPath("$.pointPositions.P1").value("MINUS"));
+    }
+
+    @Test
+    void routeRequestConflictsWhenBlockedByExistingOccupancy() throws Exception {
+        mockMvc.perform(post("/api/layout").content(sampleLayout("junction-layout.xml")))
+                .andExpect(status().isOk());
+        mockMvc.perform(post("/api/occupancy")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new SetOccupancyRequest(List.of("T3")))))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/route")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new FindRouteRequest("T1", "T5"))))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").exists());
     }
 
     private String sampleLayout(String fileName) throws Exception {
