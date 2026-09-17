@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Linear layout, no points/branches: T1 - T2 - T3 - T4 - T5 -->
+<xmi:XMI xmlns:xmi="http://www.omg.org/spec/XMI/2.4.1" xmi:version="2.4.1">
+  <xmi:Documentation exporter="interlocking-prototype" exporterVersion="0.1"/>
+  <interlocking id="ixl_simple_line" version="0.1">
+    <network id="net_simple_line">
+      <trackSection id="T1" length="100" type="linear">
+        <neighbor ref="T2" side="down"/>
+      </trackSection>
+      <trackSection id="T2" length="100" type="linear">
+        <neighbor ref="T1" side="up"/>
+        <neighbor ref="T3" side="down"/>
+      </trackSection>
+      <trackSection id="T3" length="100" type="linear">
+        <neighbor ref="T2" side="up"/>
+        <neighbor ref="T4" side="down"/>
+      </trackSection>
+      <trackSection id="T4" length="100" type="linear">
+        <neighbor ref="T3" side="up"/>
+        <neighbor ref="T5" side="down"/>
+      </trackSection>
+      <trackSection id="T5" length="100" type="linear">
+        <neighbor ref="T4" side="up"/>
+      </trackSection>
+
+      <markerboard distance="20.0" id="M1" mounted="up" track="T1"/>
+      <markerboard distance="20.0" id="M2" mounted="down" track="T5"/>
+    </network>
+    <routetable id="rt_simple_line" network="net_simple_line"/>
+  </interlocking>
+</xmi:XMI>

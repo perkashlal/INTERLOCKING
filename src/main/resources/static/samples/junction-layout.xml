@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  Layout with a branching point P1, splitting toward T3 and T4:
+
+        T1 - T2 -(P1)-+- T3 - T5
+                       +- T4 - T6
+-->
+<xmi:XMI xmlns:xmi="http://www.omg.org/spec/XMI/2.4.1" xmi:version="2.4.1">
+  <xmi:Documentation exporter="interlocking-prototype" exporterVersion="0.1"/>
+  <interlocking id="ixl_junction" version="0.1">
+    <network id="net_junction">
+      <trackSection id="T1" length="100" type="linear">
+        <neighbor ref="T2" side="down"/>
+      </trackSection>
+      <trackSection id="T2" length="100" type="linear">
+        <neighbor ref="T1" side="up"/>
+        <neighbor ref="P1" side="down"/>
+      </trackSection>
+      <trackSection id="P1" length="50" type="point">
+        <neighbor ref="T2" side="stem"/>
+        <neighbor ref="T3" side="plus"/>
+        <neighbor ref="T4" side="minus"/>
+      </trackSection>
+      <trackSection id="T3" length="100" type="linear">
+        <neighbor ref="P1" side="up"/>
+        <neighbor ref="T5" side="down"/>
+      </trackSection>
+      <trackSection id="T4" length="100" type="linear">
+        <neighbor ref="P1" side="up"/>
+        <neighbor ref="T6" side="down"/>
+      </trackSection>
+      <trackSection id="T5" length="100" type="linear">
+        <neighbor ref="T3" side="up"/>
+      </trackSection>
+      <trackSection id="T6" length="100" type="linear">
+        <neighbor ref="T4" side="up"/>
+      </trackSection>
+
+      <markerboard distance="20.0" id="M1" mounted="up" track="T1"/>
+      <markerboard distance="20.0" id="M2" mounted="down" track="T5"/>
+      <markerboard distance="20.0" id="M3" mounted="down" track="T6"/>
+    </network>
+    <routetable id="rt_junction" network="net_junction"/>
+  </interlocking>
+</xmi:XMI>

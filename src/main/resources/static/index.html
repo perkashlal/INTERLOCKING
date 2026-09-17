@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automatic Train Interlocking System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Automatic Train Interlocking System</h1>
+    <p class="subtitle">Academic prototype dashboard - load a layout, configure occupancy, request and simulate routes.</p>
+  </header>
+
+  <main>
+    <section class="card" id="layout-card">
+      <h2>1. Layout</h2>
+      <p id="layout-status" class="status-line">No layout loaded.</p>
+      <div class="row">
+        <input type="file" id="layout-file" accept=".xml" />
+        <button id="load-layout-btn">Load layout</button>
+      </div>
+      <div class="row">
+        <label for="sample-select">Or load a sample:</label>
+        <select id="sample-select">
+          <option value="">-- choose a sample --</option>
+          <option value="simple-line.xml">simple-line.xml (linear, no points)</option>
+          <option value="junction-layout.xml">junction-layout.xml (with a point)</option>
+        </select>
+        <button id="load-sample-btn">Load sample</button>
+      </div>
+    </section>
+
+    <section class="card" id="occupancy-card">
+      <h2>2. Track Occupancy</h2>
+      <p class="hint">Click a track section to toggle whether a train currently occupies it, then apply.</p>
+      <div id="occupancy-grid" class="track-grid"></div>
+      <div class="row">
+        <button id="apply-occupancy-btn">Apply occupancy</button>
+      </div>
+    </section>
+
+    <section class="card" id="route-card">
+      <h2>3. Route Request</h2>
+      <div class="row">
+        <label for="origin-select">Source</label>
+        <select id="origin-select"></select>
+        <label for="destination-select">Destination</label>
+        <select id="destination-select"></select>
+        <button id="find-route-btn">Find &amp; reserve route</button>
+      </div>
+      <div class="row">
+        <button id="simulate-btn" disabled>Simulate movement</button>
+        <button id="release-btn" disabled>Release reservation</button>
+      </div>
+      <div id="route-result" class="result-box empty">No route requested yet.</div>
+    </section>
+
+    <section class="card" id="state-card">
+      <h2>4. Current State</h2>
+      <div class="row">
+        <button id="refresh-state-btn">Refresh</button>
+        <button id="clear-state-btn">Clear state</button>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><span class="swatch free"></span> Free</span>
+        <span class="legend-item"><span class="swatch occupied"></span> Occupied</span>
+        <span class="legend-item"><span class="swatch reserved"></span> Reserved</span>
+      </div>
+      <div id="state-grid" class="track-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Academic prototype - not certified railway safety software.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
