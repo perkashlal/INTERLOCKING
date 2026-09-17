@@ -5,12 +5,14 @@ import com.interlocking.api.dto.LoadLayoutResponse;
 import com.interlocking.api.dto.ReleaseRouteRequest;
 import com.interlocking.api.dto.RouteResponse;
 import com.interlocking.api.dto.SetOccupancyRequest;
+import com.interlocking.api.dto.SimulateRouteRequest;
 import com.interlocking.api.dto.StateSnapshotResponse;
 import com.interlocking.model.LayoutGraph;
 import com.interlocking.model.TrackSection;
 import com.interlocking.parser.XmlLayoutParser;
 import com.interlocking.route.RouteResult;
 import com.interlocking.route.RouteService;
+import com.interlocking.simulation.MovementSimulator;
 import com.interlocking.state.ScenarioStateManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,8 +26,8 @@ import java.util.List;
 
 /**
  * REST facade for the dashboard (SRS Fig. 3/4): load layout, set occupancy, find
- * and reserve routes, release reservations, inspect state, and clear state.
- * Movement simulation is added once MovementSimulator exists.
+ * and reserve routes, simulate train movement along a reserved route, release
+ * reservations, inspect state, and clear state.
  */
 @RestController
 @RequestMapping("/api")
@@ -34,12 +36,14 @@ public class DashboardApiController {
     private final XmlLayoutParser layoutParser;
     private final ScenarioStateManager stateManager;
     private final RouteService routeService;
+    private final MovementSimulator movementSimulator;
 
     public DashboardApiController(XmlLayoutParser layoutParser, ScenarioStateManager stateManager,
-                                   RouteService routeService) {
+                                   RouteService routeService, MovementSimulator movementSimulator) {
         this.layoutParser = layoutParser;
         this.stateManager = stateManager;
         this.routeService = routeService;
+        this.movementSimulator = movementSimulator;
     }
 
     /** FR-01/02/03/17/18: load (or reload) a legal XML layout; replaces any prior layout and state (SPR-06). */
@@ -65,6 +69,13 @@ public class DashboardApiController {
     public RouteResponse findRoute(@RequestBody FindRouteRequest request) {
         RouteResult result = routeService.findAndReserveRoute(request.originId(), request.destinationId());
         return new RouteResponse(result.path(), result.reservedTrackIds(), result.pointsUsed());
+    }
+
+    /** FR-11/12/13: simulate train movement along a reserved route's full path (origin included). */
+    @PostMapping("/route/simulate")
+    public StateSnapshotResponse simulateRoute(@RequestBody SimulateRouteRequest request) {
+        movementSimulator.simulate(request.trackSectionPath());
+        return snapshot();
     }
 
     /** FR-09: release a previously reserved route (or any subset of it). */

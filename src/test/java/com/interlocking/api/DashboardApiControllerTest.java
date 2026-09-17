@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.interlocking.api.dto.FindRouteRequest;
 import com.interlocking.api.dto.ReleaseRouteRequest;
 import com.interlocking.api.dto.SetOccupancyRequest;
+import com.interlocking.api.dto.SimulateRouteRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +171,41 @@ class DashboardApiControllerTest {
                         .content(objectMapper.writeValueAsString(new ReleaseRouteRequest(List.of("T2", "T3", "T4", "T5")))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.reservedTrackIds").isEmpty());
+    }
+
+    @Test
+    void simulateRouteMovesOccupancyToDestinationAndClearsReservation() throws Exception {
+        mockMvc.perform(post("/api/layout").content(sampleLayout("simple-line.xml")))
+                .andExpect(status().isOk());
+        mockMvc.perform(post("/api/occupancy")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new SetOccupancyRequest(List.of("T1")))))
+                .andExpect(status().isOk());
+        mockMvc.perform(post("/api/route")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new FindRouteRequest("T1", "T5"))))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/route/simulate")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(
+                                new SimulateRouteRequest(List.of("T1", "T2", "T3", "T4", "T5")))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.occupiedTrackIds", Matchers.contains("T5")))
+                .andExpect(jsonPath("$.reservedTrackIds").isEmpty());
+    }
+
+    @Test
+    void simulateRouteRejectsAPathThatWasNeverReserved() throws Exception {
+        mockMvc.perform(post("/api/layout").content(sampleLayout("simple-line.xml")))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/route/simulate")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(
+                                new SimulateRouteRequest(List.of("T1", "T2", "T3", "T4", "T5")))))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").exists());
     }
 
     @Test
