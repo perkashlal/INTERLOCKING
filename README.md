@@ -20,9 +20,16 @@ the REST API directly, e.g.:
 ```bash
 curl -X POST http://localhost:8080/api/layout --data-binary "@sample-layouts/simple-line.xml" -H "Content-Type: application/xml"
 curl -X POST http://localhost:8080/api/occupancy -H "Content-Type: application/json" -d "{\"trackSectionIds\":[\"T1\"]}"
+curl -X POST http://localhost:8080/api/route -H "Content-Type: application/json" -d "{\"originId\":\"T1\",\"destinationId\":\"T5\"}"
+curl -X POST http://localhost:8080/api/route/release -H "Content-Type: application/json" -d "{\"trackSectionIds\":[\"T2\",\"T3\",\"T4\",\"T5\"]}"
 curl http://localhost:8080/api/state
 curl -X POST http://localhost:8080/api/state/clear
 ```
+
+`origin`/`destination` may each be a track section id or a markerboard id. Route
+finding rejects a request if any section on the only available path is already
+occupied or reserved by another route, and reports which points (if any) the
+route holds.
 
 ## Test it
 
