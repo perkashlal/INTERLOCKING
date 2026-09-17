@@ -4,3 +4,8 @@ target/
 *.iml
 .vscode/
 .DS_Store
+.claude/
+
+# Thesis work stays local only - never pushed to GitHub
+thesis/
+sample thesis/
