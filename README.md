@@ -91,9 +91,10 @@ mvn test
 
 Runs the full suite: XML parser, scenario state manager, route finder and
 reservation logic, movement simulator, full-workflow integration tests (load
-→ occupy → route → simulate, iterative requests, clear/reload), and a
-dedicated acceptance-criteria suite covering AC-01 through AC-13 from the
-SRS.
+→ occupy → route → simulate, iterative requests, clear/reload) against both
+the synthetic sample layouts and the real DK-IXL export format (`lvr_1.xml`,
+including its passing loop), and a dedicated acceptance-criteria suite
+covering AC-01 through AC-13 from the SRS.
 
 ## Layout format
 
