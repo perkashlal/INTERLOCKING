@@ -5,8 +5,13 @@ import com.interlocking.model.Markerboard;
 import com.interlocking.model.Neighbor;
 import com.interlocking.model.TrackSection;
 import com.interlocking.model.TrackSectionType;
+import com.interlocking.parser.XmlLayoutParser;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,5 +122,41 @@ class RouteFinderTest {
     @Test
     void singleSectionRouteWhenOriginEqualsDestination() {
         assertThat(routeFinder.findRoute(linearLayout(), "T1", "T1", id -> true)).contains(List.of("T1"));
+    }
+
+    @Test
+    void neverStraddlesBothBranchesOfAPointInOneRoute() {
+        // T3 and T4 are only connected to each other through P1 (plus and minus
+        // respectively); a point can't connect its plus and minus legs directly
+        // (only stem<->plus or stem<->minus), so no route between them can exist.
+        Optional<List<String>> path = routeFinder.findRoute(junctionLayout(), "T3", "T4", id -> true);
+
+        assertThat(path).isEmpty();
+    }
+
+    @Test
+    void findsRouteThroughTwoPointsOnTheRealExportedLayout() throws IOException {
+        LayoutGraph layout = new XmlLayoutParser().parse(sampleLayout("lvr_1.xml"));
+
+        // 533 -(plus)- PM01U -(stem)- 083 -(stem)- PM02U -(plus)- PM03U: enters and
+        // leaves each point via a stem<->plus pair, so it's a legal route.
+        Optional<List<String>> path = routeFinder.findRoute(layout, "533", "PM03U", id -> true);
+
+        assertThat(path).contains(List.of("533", "PM01U", "083", "PM02U", "PM03U"));
+    }
+
+    @Test
+    void rejectsPlusToMinusStraddleOnTheRealExportedLayout() throws IOException {
+        LayoutGraph layout = new XmlLayoutParser().parse(sampleLayout("lvr_1.xml"));
+
+        // 533 is PM01U's plus leg and 534 is its minus leg; PM01U is their only
+        // connection, so straddling it directly must be rejected.
+        Optional<List<String>> path = routeFinder.findRoute(layout, "533", "534", id -> true);
+
+        assertThat(path).isEmpty();
+    }
+
+    private InputStream sampleLayout(String fileName) throws IOException {
+        return Files.newInputStream(Path.of("sample-layouts", fileName));
     }
 }
