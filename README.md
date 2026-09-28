@@ -1,5 +1,7 @@
 # Automatic Train Interlocking System
 
+[![CI](https://github.com/perkashlal/INTERLOCKING/actions/workflows/ci.yml/badge.svg)](https://github.com/perkashlal/INTERLOCKING/actions/workflows/ci.yml)
+
 Academic prototype (Spring Boot / Java 21) that loads a railway layout from XML,
 lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
