@@ -5,8 +5,9 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** feature-complete per the 10-day build plan (Days 1-10). All 62 tests
+pass (`mvn test`), including acceptance criteria AC-01 through AC-13. See commit
+history for progress by day.
 
 ## Prerequisites
 
