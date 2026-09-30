@@ -5,8 +5,9 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete (Day 10 final polish). All functional requirements
+FR-01 to FR-18 are implemented and the full test suite (63 tests) passes.
+See commit history for the day-by-day build.
 
 ## Prerequisites
 
@@ -101,3 +102,23 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## Requirements traceability
+
+| SRS requirement | Where it lives |
+|---|---|
+| FR-01 – FR-03 load/parse XML, build topology graph | `parser/XmlLayoutParser`, `model/LayoutGraph` |
+| FR-04, FR-16 configure / clear occupancy | `state/ScenarioStateManager`, `POST /api/occupancy`, `POST /api/state/clear` |
+| FR-05 – FR-10, FR-14 route request, safety checks, reservation, rejection with reason | `route/RouteFinder`, `route/RouteService`, `POST /api/route` |
+| FR-11 – FR-13, FR-15 movement simulation and persisted state | `simulation/MovementSimulator`, `POST /api/route/simulate`, `GET /api/state` |
+| FR-17 reload layout | `POST /api/layout` |
+| FR-18 reject malformed XML | `exception/GlobalExceptionHandler`, `sample-layouts/malformed.xml` |
+
+Acceptance criteria AC-01 – AC-13 are covered by
+`src/test/java/com/interlocking/acceptance/AcceptanceCriteriaTest.java`.
+
+## Known limitations
+
+- State is in-memory and single-scenario; it resets on restart.
+- Movement simulation is a discrete step-through of the reserved path, not a
+  timed animation.
