@@ -5,8 +5,27 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete (Day 10 of the build plan). All SRS functional
+requirements are implemented and covered by tests (62 passing); see commit
+history for the day-by-day build.
+
+## Architecture
+
+| Package | Responsibility |
+|---|---|
+| `parser` | `XmlLayoutParser`: validates and parses layout XML into a `LayoutGraph` |
+| `model` | Domain model (track sections, points, markerboards, graph) |
+| `state` | `ScenarioStateManager`: in-memory occupancy/reservation state |
+| `route` | `RouteFinder` / route service: safe path search and reservation |
+| `simulation` | `MovementSimulator`: moves a train along a reserved route |
+| `api` | REST controller + DTOs backing the dashboard |
+| `exception` | Error types and global handler (malformed input -> clean 4xx) |
+
+## Known limitations
+
+- State is in memory only and resets on restart.
+- Single scenario at a time; no authentication (academic prototype).
+- Out of scope per SRS: timetabling, train speed modelling, traffic optimisation.
 
 ## Prerequisites
 
