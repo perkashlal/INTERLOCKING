@@ -5,8 +5,9 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete — all 10 build-plan days are done (73 automated tests
+passing, including acceptance criteria AC-01 to AC-13). See commit history for
+progress by day.
 
 ## Prerequisites
 
@@ -94,6 +95,19 @@ reservation logic, movement simulator, full-workflow integration tests (load
 → occupy → route → simulate, iterative requests, clear/reload), and a
 dedicated acceptance-criteria suite covering AC-01 through AC-13 from the
 SRS.
+
+## Architecture
+
+| Package | Responsibility |
+|---|---|
+| `parser` | `XmlLayoutParser` — XML layout to `LayoutGraph`; rejects malformed input (FR-18) |
+| `model` | Domain model: track sections, points, markerboards, layout graph |
+| `state` | `ScenarioStateManager` — in-memory occupancy/reservation state across requests |
+| `route` | `RouteFinder` and route reservation/release (points held by a route) |
+| `simulation` | `MovementSimulator` — moves a train along a reserved route |
+| `api` / `exception` | REST controller, DTOs, and global error handling |
+
+The web dashboard lives in `src/main/resources/static/`.
 
 ## Layout format
 
