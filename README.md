@@ -5,8 +5,8 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** feature-complete against the SRS (Day 10 wrap-up). All 62 tests
+pass (`mvn test`). See commit history for the day-by-day build.
 
 ## Prerequisites
 
@@ -101,3 +101,21 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## SRS coverage
+
+| Area | Where |
+|------|-------|
+| Layout parsing, malformed XML rejection (FR-18) | `parser/XmlLayoutParser`, `GlobalExceptionHandler` |
+| Occupancy and persisted state, clear/reload (SPR-03..06) | `state/ScenarioStateManager` |
+| Route search, rejection of occupied/reserved sections (NFR-01, NFR-06) | `route/RouteFinder`, `route/RouteService` |
+| Accept/reject reasons (NFR-02) | `RouteResponse` message and rejection reason |
+| Movement simulation, occupancy updates | `simulation/MovementSimulator` |
+| Dashboard (NFR-03) | `src/main/resources/static/` |
+| Tests (NFR-04), acceptance criteria AC-01..AC-13 | `src/test/java/.../acceptance` |
+
+## Limitations
+
+Per the SRS this is an academic prototype, not certified safety software. There
+is no speed, braking or timetable model, state is in-memory only, and a single
+scenario user is assumed.
