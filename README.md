@@ -5,8 +5,15 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete per the 10-day build plan (all 62 tests passing, including
+acceptance criteria AC-01 through AC-13). See commit history for progress by day.
+
+## Architecture
+
+Components are kept separate (NFR-05): `parser` (XML → layout), `model`
+(layout graph), `state` (occupancy/reservations), `route` (route finding and
+reservation, safety checks before any reservation — NFR-06), `simulation`
+(movement), and `api` (REST + dashboard).
 
 ## Prerequisites
 
