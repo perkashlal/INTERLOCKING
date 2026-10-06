@@ -5,8 +5,22 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete per the 10-day build plan (Days 1-9 implementation,
+integration tests and acceptance tests; Day 10 final verification and
+documentation). `mvn test` passes in full. See commit history for progress by
+day.
+
+## Project structure
+
+| Package | Responsibility |
+|---|---|
+| `parser` | XML layout parsing and validation (FR-18 rejection of malformed files) |
+| `model` | Layout graph: track sections, points, markerboards |
+| `state` | In-memory scenario state: occupancy and reservations |
+| `route` | Route finding and reservation (points held, conflicts rejected) |
+| `simulation` | Train movement along a reserved route |
+| `api` | REST controller and DTOs; static dashboard in `resources/static` |
+| `exception` | Global error handling |
 
 ## Prerequisites
 
