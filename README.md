@@ -5,8 +5,9 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete (Day 10 wrap-up). All SRS functional areas are implemented
+and the full suite (62 tests, including acceptance criteria AC-01 to AC-13)
+passes. See commit history for progress by day.
 
 ## Prerequisites
 
@@ -101,3 +102,12 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## Scope and known limitations
+
+Per the SRS, this is strictly interlocking-style safety logic. It does not
+model timetables, train speed, passenger services or traffic optimisation.
+State is held in memory only (reset on restart), there is no authentication,
+and the app serves a single scenario at a time (not designed for concurrent
+users). Route finding returns a single path and rejects the request if that
+path is blocked, rather than searching for alternatives.
