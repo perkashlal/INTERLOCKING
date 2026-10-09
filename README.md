@@ -5,8 +5,8 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** feature-complete against the SRS (FR-01–FR-18, NFR-01–NFR-06,
+SPR-01–SPR-06, AC-01–AC-13). Built day by day; see commit history.
 
 ## Prerequisites
 
@@ -101,3 +101,15 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## SRS traceability
+
+| SRS area | Where implemented | Verified by |
+|---|---|---|
+| FR-01–03, FR-18 (load/parse/graph/reject bad XML) | `parser/XmlLayoutParser`, layout model | `XmlLayoutParserTest`, AC-01/02/13 |
+| FR-04, FR-13–17, SPR-01–06 (occupancy, persistence, clear, reload) | `state/ScenarioStateManager` | `ScenarioStateManagerTest`, AC-03/09–12 |
+| FR-05–10, NFR-01/02/06 (route find, reserve, reject with reason) | `route/RouteFinder`, route service | `RouteFinderTest`, `RouteServiceTest`, AC-04–07 |
+| FR-11–12 (movement simulation) | `simulation/MovementSimulator` | `MovementSimulatorTest`, AC-08 |
+| NFR-03 (usability) | `static/` dashboard | `FullWorkflowIntegrationTest` |
+
+Full suite: 62 tests, all passing (`mvn test`).
