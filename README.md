@@ -5,8 +5,8 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete per the 10-day build plan (Days 1-10). All 62 tests pass
+(`mvn test`). See commit history for progress by day.
 
 ## Prerequisites
 
@@ -101,3 +101,21 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## Project structure
+
+| Package | Responsibility |
+|---|---|
+| `parser` | `XmlLayoutParser`: XML layout to `LayoutGraph`, with validation (malformed input rejected) |
+| `model` | Layout graph: track sections, points, markerboards |
+| `state` | `ScenarioStateManager`: in-memory occupancy and reservations, persisted across requests |
+| `route` | `RouteFinder` / route service: safe path search and reservation |
+| `simulation` | `MovementSimulator`: moves a train along a reserved route |
+| `api` | REST controller and DTOs backing the dashboard |
+| `exception` | Parse errors and global error mapping to `ApiError` |
+
+## Verification
+
+- Unit tests per component, plus full-workflow integration tests.
+- `AcceptanceCriteriaTest` maps one test to each SRS acceptance criterion (AC-01 to AC-13).
+- Known limitation: state is in-memory only and single-scenario; it resets on restart.
