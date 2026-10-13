@@ -5,8 +5,8 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** feature-complete per the SRS (FR-01–FR-18, NFR-01–NFR-06); all 62
+tests pass. Built day by day — see commit history.
 
 ## Prerequisites
 
@@ -101,3 +101,28 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## Architecture
+
+| Package | Responsibility |
+|---|---|
+| `parser` | `XmlLayoutParser` — XML to `LayoutGraph`, rejects malformed input |
+| `model` | Track sections, markerboards, neighbors, topology graph |
+| `state` | `ScenarioStateManager` — in-memory occupancy/reservations |
+| `route` | `RouteFinder` / `RouteService` — path search, safety checks, reservation |
+| `simulation` | `MovementSimulator` — moves occupancy along a reserved route |
+| `api` | REST controller + DTOs backing the dashboard |
+
+## Requirements traceability
+
+| SRS | Implemented in | Verified by |
+|---|---|---|
+| FR-01–FR-03, FR-18 (load/parse/graph/reject bad XML) | `XmlLayoutParser`, `LayoutGraph` | `XmlLayoutParserTest`, AcceptanceCriteriaTest |
+| FR-04, FR-13, FR-14 (occupancy, persistence) | `ScenarioStateManager` | `ScenarioStateManagerTest`, `FullWorkflowIntegrationTest` |
+| FR-05–FR-10 (route request, validation, reservation, rejection) | `RouteFinder`, `RouteService` | `RouteFinderTest`, AcceptanceCriteriaTest |
+| FR-11, FR-12 (movement simulation, occupancy update) | `MovementSimulator` | `MovementSimulatorTest` |
+| FR-15–FR-17 (iterative requests, clear, reload) | `ScenarioStateManager`, API | `FullWorkflowIntegrationTest` |
+| NFR-01, NFR-06 (safety before reserve/move) | `RouteService` | AcceptanceCriteriaTest |
+| NFR-02 (accept/reject reasons) | `RouteResponse` messages | `DashboardApiControllerTest` |
+| NFR-03 (usability) | `static/` dashboard | manual walkthrough above |
+| NFR-04, NFR-05 (testability, separation) | package layout above | `mvn test` |
