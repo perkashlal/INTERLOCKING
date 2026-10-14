@@ -5,8 +5,9 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete (Day 10). All functional areas from the SRS are
+implemented and covered by 62 automated tests (`mvn test`). See commit history
+for the day-by-day build.
 
 ## Prerequisites
 
@@ -101,3 +102,18 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## Project status (Day 10 wrap-up)
+
+| Area | Where |
+|---|---|
+| XML layout parsing and validation (FR-18 rejection of malformed input) | `parser/` |
+| Layout graph model | `model/` |
+| Occupancy and state management, clear/reload | `state/` |
+| Route finding and reservation (rejects occupied/reserved sections, NFR-01/06) | `route/` |
+| Movement simulation | `simulation/` |
+| REST API and error handling | `api/`, `exception/` |
+| Web dashboard | `src/main/resources/static/` |
+| Acceptance criteria AC-01..AC-13 | `src/test/.../acceptance/` |
+
+State is in-memory only and resets on restart, by design for this prototype.
