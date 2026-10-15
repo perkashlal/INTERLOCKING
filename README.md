@@ -5,8 +5,20 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete (Day 10). All SRS functional requirements are implemented
+and the full suite of 62 tests (including acceptance criteria AC-01 to AC-13)
+passes. See commit history for the day-by-day build.
+
+## Architecture
+
+| Package | Responsibility |
+|---|---|
+| `parser` | XML layout parsing and validation (rejects malformed layouts) |
+| `model` | Layout graph: track sections, points, markerboards |
+| `state` | In-memory scenario state: occupancy and reservations |
+| `route` | Route finding and reservation with safety checks |
+| `simulation` | Movement of a train along a reserved route |
+| `api` | REST controller, DTOs and the static web dashboard |
 
 ## Prerequisites
 
