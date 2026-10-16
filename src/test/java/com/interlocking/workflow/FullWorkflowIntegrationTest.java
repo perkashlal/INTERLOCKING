@@ -152,6 +152,29 @@ class FullWorkflowIntegrationTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void realExportedLayoutSupportsRouteReservationThroughPoints() throws Exception {
+        mockMvc.perform(post("/api/layout").content(sampleLayout("lvr_1.xml")))
+                .andExpect(status().isOk());
+        mockMvc.perform(post("/api/occupancy")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new SetOccupancyRequest(List.of("533")))))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/route")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new FindRouteRequest("533", "803"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.trackSectionPath[0]").value("533"))
+                .andExpect(jsonPath("$.trackSectionPath", Matchers.hasItems("PM01U", "083", "PM02U", "803")));
+
+        // The same corridor is now reserved, so a conflicting request must be refused.
+        mockMvc.perform(post("/api/route")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new FindRouteRequest("534", "803"))))
+                .andExpect(status().isBadRequest());
+    }
+
     private String sampleLayout(String fileName) throws Exception {
         return Files.readString(Path.of("sample-layouts", fileName));
     }
