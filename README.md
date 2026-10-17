@@ -5,8 +5,8 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete — all 10 build days finished (FR-01..FR-18 implemented,
+62 automated tests passing). See commit history for progress by day.
 
 ## Prerequisites
 
@@ -101,3 +101,15 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## Requirements coverage (Day 10)
+
+| SRS item | Where it is covered |
+|---|---|
+| FR-01..FR-18 (load, occupancy, route find/reserve/release, simulation, state, clear/reload, malformed XML rejection) | `parser/`, `state/`, `route/`, `simulation/`, `api/`; verified by `AcceptanceCriteriaTest` (AC-01..AC-13) |
+| NFR-01 Correctness | `RouteFinder` rejects occupied/reserved paths; `RouteFinderTest` |
+| NFR-02 Traceability | Route responses carry the accept/reject reason and held points |
+| NFR-03 Usability | Dashboard in `src/main/resources/static` |
+| NFR-04 Testability | One test class per component plus `FullWorkflowIntegrationTest` |
+| NFR-05 Maintainability | Parser, route, state and simulation are separate packages behind a thin REST layer |
+| NFR-06 Safety-first | Ambiguous or conflicting requests are rejected, never partially applied |
