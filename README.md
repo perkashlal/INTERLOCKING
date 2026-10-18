@@ -5,8 +5,9 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete — all functional requirements (FR-01 to FR-18) and
+acceptance criteria (AC-01 to AC-13) are implemented and tested. See commit
+history for the day-by-day build.
 
 ## Prerequisites
 
@@ -101,3 +102,33 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## Architecture
+
+Components are kept separate (NFR-05):
+
+| Package | Responsibility |
+|---|---|
+| `parser` | `XmlLayoutParser` — XML to layout, rejects malformed/illegal files (FR-01, FR-18) |
+| `model` | `LayoutGraph`, `TrackSection`, `Markerboard`, `Neighbor` — topology (FR-02, FR-03) |
+| `state` | `ScenarioStateManager` — occupancy, reservations, persistence, clear/reload (FR-04, FR-13–FR-17) |
+| `route` | `RouteFinder`, `RouteService` — path search, safety checks, reservation (FR-05–FR-10) |
+| `simulation` | `MovementSimulator` — section-by-section movement (FR-11, FR-12) |
+| `api` | REST controller + DTOs backing the dashboard (NFR-03) |
+| `exception` | Parse errors and global error handling with clear messages |
+
+Safety checks run before any reservation or movement (NFR-06); routes through
+occupied or reserved sections are rejected (NFR-01), and responses explain why
+a route was accepted or rejected (NFR-02).
+
+## Requirement coverage
+
+| Test class | Covers |
+|---|---|
+| `XmlLayoutParserTest` | FR-01–FR-03, FR-18 |
+| `ScenarioStateManagerTest` | FR-04, FR-13, FR-14, FR-16, FR-17 |
+| `RouteFinderTest`, `RouteServiceTest` | FR-05–FR-10, NFR-01 |
+| `MovementSimulatorTest` | FR-11, FR-12 |
+| `DashboardApiControllerTest` | REST layer, NFR-02 |
+| `FullWorkflowIntegrationTest` | FR-15, end-to-end iterative workflow |
+| `AcceptanceCriteriaTest` | AC-01 – AC-13 |
