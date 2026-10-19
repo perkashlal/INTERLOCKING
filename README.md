@@ -5,8 +5,9 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete (Day 10 final polish). All SRS functional requirements and
+acceptance criteria AC-01 through AC-13 are implemented and covered by tests;
+see commit history for the day-by-day build.
 
 ## Prerequisites
 
