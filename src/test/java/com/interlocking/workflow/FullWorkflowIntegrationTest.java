@@ -79,6 +79,37 @@ class FullWorkflowIntegrationTest {
     }
 
     @Test
+    void realExportedLayoutSupportsRouteReserveSimulateAndRejectsConflict() throws Exception {
+        mockMvc.perform(post("/api/layout").content(sampleLayout("lvr_1.xml")))
+                .andExpect(status().isOk());
+        mockMvc.perform(post("/api/occupancy")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new SetOccupancyRequest(List.of("533")))))
+                .andExpect(status().isOk());
+
+        // 533 -> 083 must pass through the point PM01U, which gets reserved with the route.
+        mockMvc.perform(post("/api/route")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new FindRouteRequest("533", "083"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.trackSectionPath", Matchers.contains("533", "PM01U", "083")));
+
+        // Safety: the other branch into the same point is now blocked (NFR-01).
+        mockMvc.perform(post("/api/route")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new FindRouteRequest("534", "083"))))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(post("/api/route/simulate")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(
+                                new SimulateRouteRequest(List.of("533", "PM01U", "083")))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.occupiedTrackIds", Matchers.contains("083")))
+                .andExpect(jsonPath("$.reservedTrackIds").isEmpty());
+    }
+
+    @Test
     void failedRouteRequestLeavesExistingReservationsUntouched() throws Exception {
         mockMvc.perform(post("/api/layout").content(sampleLayout("junction-layout.xml")))
                 .andExpect(status().isOk());
