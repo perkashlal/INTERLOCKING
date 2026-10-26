@@ -5,8 +5,21 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete per the 10-day build plan (Days 1-10). All 62 automated
+tests pass (`mvn test`), including acceptance tests AC-01 to AC-13. See commit
+history for progress by day.
+
+## Requirements coverage
+
+| SRS area | Where it lives |
+|---|---|
+| FR layout loading / validation (incl. FR-18 rejection of malformed XML) | `parser/XmlLayoutParser`, `exception/` |
+| Occupancy, state persistence, clear/reload | `state/ScenarioStateManager` |
+| Route finding and reservation (NFR-01, NFR-06 safety checks first) | `route/` |
+| Movement simulation | `simulation/` |
+| REST API and dashboard (NFR-03) | `api/`, `src/main/resources/static/` |
+| Traceability of accept/reject reasons (NFR-02) | route responses and `ApiError` |
+| Testability / maintainability (NFR-04, NFR-05) | one package per component, tests mirror them |
 
 ## Prerequisites
 
