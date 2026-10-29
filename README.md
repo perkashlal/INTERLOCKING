@@ -5,8 +5,8 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete per the 10-day build plan (Days 1-10). See commit history
+for progress by day.
 
 ## Prerequisites
 
@@ -101,3 +101,18 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## Project structure and NFR mapping
+
+| Package | Responsibility | SRS NFR |
+|---|---|---|
+| `parser` | XML layout parsing and validation (malformed input rejected) | NFR-04, NFR-05 |
+| `model` | Layout graph / domain model | NFR-05 |
+| `state` | Occupancy, reservations, persistence across requests, clear/reload | NFR-04 |
+| `route` | Route finding; safety checks run before any reservation | NFR-01, NFR-06 |
+| `simulation` | Movement simulation; validates the route before moving | NFR-06 |
+| `api` | REST layer; responses explain why a route was accepted or rejected | NFR-02 |
+| `static/` | Web dashboard (layout, occupancy, route, result, state) | NFR-03 |
+
+Every package is covered by tests under `src/test` (NFR-04), and acceptance
+criteria AC-01 to AC-13 are exercised in `AcceptanceCriteriaTest`.
