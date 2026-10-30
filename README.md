@@ -5,8 +5,19 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete — all 10 build-plan days delivered (parser, state,
+route finding/reservation, simulation, REST API, dashboard, acceptance tests
+AC-01..AC-13). See commit history for progress by day.
+
+## Testing
+
+```bash
+mvn test
+```
+
+62 tests cover the parser, state manager, route finder/service, movement
+simulator, REST API, a full-workflow integration test, and the SRS acceptance
+criteria (`AcceptanceCriteriaTest`).
 
 ## Prerequisites
 
