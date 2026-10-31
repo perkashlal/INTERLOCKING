@@ -5,8 +5,8 @@ lets a user configure initial track occupancy, finds and reserves a safe route
 between two tracks, simulates train movement, and persists state across
 iterative requests. Built from the project's SRS.
 
-**Status:** work in progress, built day by day. See commit history for progress
-by day.
+**Status:** complete per the 10-day build plan (Days 1-10). All 62 automated
+tests pass, including the AC-01 through AC-13 acceptance suite.
 
 ## Prerequisites
 
@@ -101,3 +101,20 @@ SRS.
 export format (`lvr_1.xml`) this project targets: track sections (some of type
 `point`, with `plus`/`minus`/`stem` neighbors) and markerboards under an
 `interlocking`/`network` wrapper.
+
+## Build summary
+
+| Day | Deliverable |
+|-----|-------------|
+| 1-2 | Maven/Spring Boot skeleton, domain model, `XmlLayoutParser` |
+| 3 | `ScenarioStateManager` and REST layer (layout, occupancy, state) |
+| 4-5 | `RouteFinder`, route reservation, point handling |
+| 6 | Movement simulation |
+| 7-8 | Full-workflow integration tests and web dashboard |
+| 9 | Acceptance-criteria tests (AC-01 to AC-13) |
+| 10 | Final verification (full suite green) and documentation wrap-up |
+
+## Known limitations
+
+- State is in memory only and resets on restart.
+- Single scenario at a time; no authentication (academic prototype).
